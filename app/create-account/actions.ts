@@ -28,19 +28,6 @@ const checkUsername = (username: string) => {
   return !username.includes("potato");
 };
 
-const checkUniqueUsername = async (username: string) => {
-  const user = await db.user.findUnique({
-    where: {
-      username,
-    },
-    select: {
-      id: true,
-    },
-  });
-
-  return !Boolean(user);
-};
-
 const checkUniqueEmail = async (email: string) => {
   const user = await db.user.findUnique({
     where: {
@@ -75,14 +62,8 @@ const formSchema = z
       .min(USERNAME_MIN_LENGTH, USERNAME_ERROR_MIN_LENGTH)
       .max(USERNAME_MAX_LENGTH, USERNAME_ERROR_MAX_LENGTH)
       .toLowerCase()
-      .trim()
-      .refine(checkUsername, USERNAME_ERROR_INVALID_NAME)
-      .refine(checkUniqueUsername, USERNAME_ERROR_INVALID_NAME_UNIQUE),
-    email: z
-      .string()
-      .email()
-      .toLowerCase()
-      .refine(checkUniqueEmail, EMAIL_ERROR_INVALID_EMAIL_UNIQUE),
+      .trim(),
+    email: z.string().email().toLowerCase(),
     password: z
       .string({
         required_error: PASSWORD_ERROR_REQUIRED,
@@ -91,6 +72,46 @@ const formSchema = z
       .trim(),
     // .regex(PASSWORD_REGEX, PASSWORD_ERROR_REGEX),
     confirmPassword: z.string().min(PASSWORD_MIN_LENGTH).trim(),
+  })
+  .superRefine(async (data, context) => {
+    const user = await db.user.findUnique({
+      where: {
+        username: data.username,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (user) {
+      context.addIssue({
+        code: "custom",
+        message: USERNAME_ERROR_INVALID_NAME_UNIQUE,
+        path: ["username"],
+      });
+      // NEVER 로 다른 로직은 실행되지 않게 break.
+      return z.NEVER;
+    }
+  })
+  .superRefine(async (data, context) => {
+    const user = await db.user.findUnique({
+      where: {
+        email: data.email,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (user) {
+      context.addIssue({
+        code: "custom",
+        message: EMAIL_ERROR_INVALID_EMAIL_UNIQUE,
+        path: ["email"],
+      });
+    }
+
+    return z.NEVER;
   })
   .refine(bothPasswordCheck, {
     message: PASSWORD_ERROR_MISMATCH,
