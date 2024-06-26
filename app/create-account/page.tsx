@@ -1,10 +1,15 @@
 "use client";
 
-import FormButton from "@/components/form-btn";
-import FormInput from "@/components/form-input";
 import SocialLogin from "@/components/social-login";
 import { useFormState } from "react-dom";
 import { createAccount } from "./actions";
+import Input from "@/components/input";
+import Button from "@/components/button";
+import {
+  PASSWORD_MIN_LENGTH,
+  USERNAME_MAX_LENGTH,
+  USERNAME_MIN_LENGTH,
+} from "@/lib/constants";
 
 export default function CreateAccount() {
   const [state, dispatch] = useFormState(createAccount, null);
@@ -12,38 +17,42 @@ export default function CreateAccount() {
     <div className="flex flex-col gap-10 py-8 px-6">
       <div className="flex flex-col gap-2 *:font-medium">
         <h1 className="text-2xl">안녕하세요!</h1>
-        <h2 className="text-xl">Fill in the form below to join!</h2>
+        <h2 className="text-xl">회원가입 양식을 작성해주세요!</h2>
       </div>
       <form action={dispatch} className="flex flex-col gap-3">
-        <FormInput
+        <Input
           type="text"
-          placeholder="Username"
+          placeholder="유저 명"
           required
           name={"username"}
           errors={state?.fieldErrors.username}
+          minLength={USERNAME_MIN_LENGTH}
+          maxLength={USERNAME_MAX_LENGTH}
         />
-        <FormInput
+        <Input
           type="email"
-          placeholder="Email"
+          placeholder="이메일"
           required
           name={"email"}
           errors={state?.fieldErrors.email}
         />
-        <FormInput
+        <Input
           type="password"
-          placeholder="Password"
+          placeholder="비밀번호"
           required
           name={"password"}
           errors={state?.fieldErrors.password}
+          minLength={PASSWORD_MIN_LENGTH}
         />
-        <FormInput
+        <Input
           type="password"
-          placeholder="Confirm Password"
+          placeholder="비밀번호 확인"
           required
           name={"confirmPassowrd"}
           errors={state?.fieldErrors.confirmPassword}
+          minLength={PASSWORD_MIN_LENGTH}
         />
-        <FormButton text="Create account" />
+        <Button text="계정 생성하기" />
       </form>
       <SocialLogin />
     </div>

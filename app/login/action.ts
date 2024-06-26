@@ -1,6 +1,22 @@
 "use server";
 
-import { redirect } from "next/navigation";
+import {
+  PASSWORD_ERROR_REGEX,
+  PASSWORD_ERROR_REQUIRED,
+  PASSWORD_MIN_LENGTH,
+  PASSWORD_REGEX,
+} from "@/lib/constants";
+import { z } from "zod";
+
+const formSchema = z.object({
+  email: z.string().email().toLowerCase(),
+  password: z
+    .string({
+      required_error: PASSWORD_ERROR_REQUIRED,
+    })
+    .min(PASSWORD_MIN_LENGTH)
+    .regex(PASSWORD_REGEX, PASSWORD_ERROR_REGEX),
+});
 
 /**
  * form action 으로 동작하게 되는 함수..
@@ -8,12 +24,16 @@ import { redirect } from "next/navigation";
  *
  * @param formData Form 값에 입력 되는 form-data
  */
-export async function handleForm(prevData: any, formData: FormData) {
-  "use server"; // 서버에서만 동작하는 함수라고 지정
-  console.log(formData.get("email"), formData.get("password"));
-  await new Promise((resolve) => setTimeout(resolve, 5000));
-
-  return {
-    errors: ["WRONG PASSWORD", "PASSWORD TOO SHORT"],
+export async function login(prevData: any, formData: FormData) {
+  const data = {
+    email: formData.get("email"),
+    password: formData.get("password"),
   };
+  const result = formSchema.safeParse(data);
+  if (!result.success) {
+    console.log(result.error.flatten());
+    return result.error.flatten();
+  } else {
+    console.log(result.data);
+  }
 }

@@ -2,11 +2,11 @@
 
 import { useFormStatus } from "react-dom";
 
-interface FormButtonProps {
+interface IButtonProps {
   text: string;
 }
 
-export default function FormButton({ text }: FormButtonProps) {
+export default function Button({ text }: IButtonProps) {
   /**
    * useFormStatus 는 현재 form 의 상태를 알 수 있는 React 내장함수
    * pending 은 해당 함수가 종료되었는지 여부를 알 수 있음

@@ -1,5 +1,19 @@
 "use server";
 
+import {
+  PASSWORD_ERROR_MISMATCH,
+  PASSWORD_ERROR_REGEX,
+  PASSWORD_ERROR_REQUIRED,
+  PASSWORD_MIN_LENGTH,
+  PASSWORD_REGEX,
+  USERNAME_ERROR_INVALID_NAME,
+  USERNAME_ERROR_INVALID_TYPE,
+  USERNAME_ERROR_MAX_LENGTH,
+  USERNAME_ERROR_MIN_LENGTH,
+  USERNAME_ERROR_REQUIRED,
+  USERNAME_MAX_LENGTH,
+  USERNAME_MIN_LENGTH,
+} from "@/lib/constants";
 import { z } from "zod";
 
 const checkUsername = (username: string) => {
@@ -23,18 +37,25 @@ const formSchema = z
   .object({
     username: z
       .string({
-        invalid_type_error: "올바른 형식의 유저명을 입력해 주세요.",
-        required_error: "유저 명을 입력해 주세요.",
+        invalid_type_error: USERNAME_ERROR_INVALID_TYPE,
+        required_error: USERNAME_ERROR_REQUIRED,
       })
-      .min(3, "유저 명이 너무 짧습니다.")
-      .max(10, "유저 명이 너무 깁니다.")
-      .refine(checkUsername, "부적절한 유저 명 입니다."),
-    email: z.string().email(),
-    password: z.string().min(10),
-    confirmPassword: z.string().min(10),
+      .min(USERNAME_MIN_LENGTH, USERNAME_ERROR_MIN_LENGTH)
+      .max(USERNAME_MAX_LENGTH, USERNAME_ERROR_MAX_LENGTH)
+      .toLowerCase()
+      .trim()
+      .refine(checkUsername, USERNAME_ERROR_INVALID_NAME),
+    email: z.string().email().toLowerCase(),
+    password: z
+      .string({
+        required_error: PASSWORD_ERROR_REQUIRED,
+      })
+      .min(PASSWORD_MIN_LENGTH)
+      .regex(PASSWORD_REGEX, PASSWORD_ERROR_REGEX),
+    confirmPassword: z.string().min(PASSWORD_MIN_LENGTH),
   })
   .refine(bothPasswordCheck, {
-    message: "비밀번호가 서로 다릅니다.",
+    message: PASSWORD_ERROR_MISMATCH,
     path: ["confirmPassword"],
   });
 
@@ -61,5 +82,7 @@ export async function createAccount(prevState: any, formData: FormData) {
   if (!result.success) {
     console.log(result.error.flatten());
     return result.error.flatten();
+  } else {
+    console.log(result.data);
   }
 }
