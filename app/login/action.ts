@@ -1,21 +1,42 @@
 "use server";
 
 import {
+  EMAIL_ERROR_NOT_FOUND,
   PASSWORD_ERROR_REGEX,
   PASSWORD_ERROR_REQUIRED,
   PASSWORD_MIN_LENGTH,
   PASSWORD_REGEX,
 } from "@/lib/constants";
+import db from "@/lib/db";
 import { z } from "zod";
+import bcrypt from "bcrypt";
+import getSession from "@/lib/session";
+import { redirect } from "next/navigation";
+
+const checkEmailExists = async (email: string) => {
+  const user = await db.user.findUnique({
+    where: {
+      email,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  return Boolean(user);
+};
 
 const formSchema = z.object({
-  email: z.string().email().toLowerCase(),
-  password: z
-    .string({
-      required_error: PASSWORD_ERROR_REQUIRED,
-    })
-    .min(PASSWORD_MIN_LENGTH)
-    .regex(PASSWORD_REGEX, PASSWORD_ERROR_REGEX),
+  email: z
+    .string()
+    .email()
+    .toLowerCase()
+    .refine(checkEmailExists, EMAIL_ERROR_NOT_FOUND),
+  password: z.string({
+    required_error: PASSWORD_ERROR_REQUIRED,
+  }),
+  // .min(PASSWORD_MIN_LENGTH)
+  // .regex(PASSWORD_REGEX, PASSWORD_ERROR_REGEX),
 });
 
 /**
@@ -29,11 +50,38 @@ export async function login(prevData: any, formData: FormData) {
     email: formData.get("email"),
     password: formData.get("password"),
   };
-  const result = formSchema.safeParse(data);
+  const result = await formSchema.safeParseAsync(data);
   if (!result.success) {
     console.log(result.error.flatten());
     return result.error.flatten();
   } else {
-    console.log(result.data);
+    // 이메일 찾기
+    // 해당하는 이메일을 찾았을 때 비밀번호 해싱
+    const user = await db.user.findUnique({
+      where: {
+        email: result.data.email,
+      },
+    });
+
+    /**
+     * bcrypt 로 해시 값과 비밀번호를 대조해서 일치하는 지 확인
+     */
+    const ok = await bcrypt.compare(result.data.password, user!.password ?? "");
+    console.log(ok);
+
+    // 유저 로그인
+    if (ok) {
+      const session = await getSession();
+      session.id = user!.id;
+      await session.save();
+      redirect("/profile");
+    } else {
+      return {
+        fieldErrors: {
+          password: ["비밀번호가 일치 하지 않습니다."],
+        },
+      };
+    }
+    // /profile 으로 이동
   }
 }

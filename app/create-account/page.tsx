@@ -37,7 +37,7 @@ export default function CreateAccount() {
           errors={state?.fieldErrors.email}
         />
         <Input
-          type="password"
+          type="text"
           placeholder="비밀번호"
           required
           name={"password"}
@@ -45,7 +45,7 @@ export default function CreateAccount() {
           minLength={PASSWORD_MIN_LENGTH}
         />
         <Input
-          type="password"
+          type="text"
           placeholder="비밀번호 확인"
           required
           name={"confirmPassowrd"}
