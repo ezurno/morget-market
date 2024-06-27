@@ -10,7 +10,7 @@ import {
 import db from "@/lib/db";
 import { z } from "zod";
 import bcrypt from "bcrypt";
-import getSession from "@/lib/session";
+import { updateSession } from "@/lib/sessions/session";
 import { redirect } from "next/navigation";
 
 const checkEmailExists = async (email: string) => {
@@ -61,24 +61,30 @@ export async function login(prevData: any, formData: FormData) {
       where: {
         email: result.data.email,
       },
+      select: {
+        id: true,
+        password: true,
+      },
     });
 
     /**
      * bcrypt 로 해시 값과 비밀번호를 대조해서 일치하는 지 확인
      */
-    const ok = await bcrypt.compare(result.data.password, user!.password ?? "");
+    const ok = await bcrypt.compare(
+      result.data.password,
+      user!.password ?? "xxxx"
+    );
     console.log(ok);
 
     // 유저 로그인
     if (ok) {
-      const session = await getSession();
-      session.id = user!.id;
-      await session.save();
+      updateSession(user!.id);
       redirect("/profile");
     } else {
       return {
         fieldErrors: {
           password: ["비밀번호가 일치 하지 않습니다."],
+          email: [],
         },
       };
     }
