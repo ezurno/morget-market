@@ -10,9 +10,15 @@ interface ISessionContent {
  *
  * @returns session 을 한 번에 관리하기 위함
  */
-export default function getSession() {
+export function getSession() {
   return getIronSession<ISessionContent>(cookies(), {
     cookieName: "morget-cookie",
     password: process.env.COOKIE_PASSWORD!,
   });
+}
+
+export async function updateSession(id: number) {
+  const session = await getSession();
+  session.id = id;
+  await session.save();
 }
