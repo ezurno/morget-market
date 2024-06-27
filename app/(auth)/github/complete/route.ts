@@ -4,7 +4,7 @@ import getGithubProfile from "@/lib/auth/github/getGithubProfile";
 import isExistUsername from "@/lib/auth/isExistUsername";
 import db from "@/lib/db";
 import { updateSession } from "@/lib/sessions/session";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -28,6 +28,7 @@ export async function GET(request: NextRequest) {
   const user = await db.user.findUnique({
     where: {
       github_id: id + "",
+      id: id,
     },
     select: {
       id: true,
@@ -44,6 +45,7 @@ export async function GET(request: NextRequest) {
       username: isExist ? `${name}-gh` : name,
       github_id: id + "",
       avatar: profile_photo,
+      id: id,
     },
     select: {
       id: true,
