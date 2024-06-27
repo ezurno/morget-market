@@ -78,7 +78,7 @@ export async function login(prevData: any, formData: FormData) {
 
     // 유저 로그인
     if (ok) {
-      updateSession(user!.id);
+      await updateSession(user!.id);
       redirect("/profile");
     } else {
       return {

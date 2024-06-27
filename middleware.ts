@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import getSession from "./lib/session";
+import { getSession } from "./lib/sessions/session";
 
 interface IRoutes {
   [key: string]: boolean;
@@ -15,19 +15,21 @@ const publicOnlyUrls: IRoutes = {
 };
 
 export async function middleware(request: NextRequest) {
+  console.log("middleware!");
   const session = await getSession();
-  const exists = publicOnlyUrls[request.nextUrl.pathname];
+  const isPublicPath = publicOnlyUrls[request.nextUrl.pathname];
 
   if (!session.id) {
-    if (!exists) {
-      // 허용 가능한 url 이 아니면
+    if (!isPublicPath) {
       return NextResponse.redirect(new URL("/", request.url));
-    } else {
+    }
+  } else {
+    if (isPublicPath) {
       return NextResponse.redirect(new URL("/products", request.url));
     }
   }
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|images|favicon.ico).*)"],
 };

@@ -22,7 +22,7 @@ import bcrypt from "bcrypt";
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import getSession from "@/lib/session";
+import { getSession } from "@/lib/sessions/session";
 
 const checkUsername = (username: string) => {
   return !username.includes("potato");
