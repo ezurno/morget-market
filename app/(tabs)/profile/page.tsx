@@ -1,6 +1,7 @@
 import db from "@/lib/db";
 import { getSession } from "@/lib/sessions/session";
 import { notFound, redirect } from "next/navigation";
+import { Suspense } from "react";
 
 async function getUser() {
   const session = await getSession();
@@ -10,27 +11,35 @@ async function getUser() {
         id: session.id,
       },
     });
-
-    if (user) return user;
+    if (user) {
+      return user;
+    }
+  } else {
+    notFound();
   }
-  notFound(); // session-id 가 없다면 page 404
+}
+
+async function Username() {
+  //await new Promise((resolve) => setTimeout(resolve, 10000));
+  const user = await getUser();
+  return <h1>Welcome! {user?.username}!</h1>;
 }
 
 export default async function Profile() {
-  const user = await getUser();
-  const logout = async () => {
+  const logOut = async () => {
     "use server";
     const session = await getSession();
     await session.destroy();
     redirect("/");
   };
-
   return (
     <div>
-      <form action={logout}>
-        <button>로그아웃</button>
+      <Suspense fallback={"Welcome!"}>
+        <Username />
+      </Suspense>
+      <form action={logOut}>
+        <button>Log out</button>
       </form>
-      <h2>어서오세요 {user?.username}</h2>
     </div>
   );
 }

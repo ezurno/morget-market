@@ -14,23 +14,37 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  username  String    @unique
-  email     String?   @unique
-  password  String?
-  phone     String?   @unique
-  github_id String?   @unique
-  avatar    String?
-  create_at DateTime  @default(now())
-  update_at DateTime  @updatedAt
-  SMSToken  SMSToken[]
+  id          Int       @id @default(autoincrement())
+  username    String    @unique
+  email       String?   @unique
+  password    String?
+  phone       String?   @unique
+  github_id   String?   @unique
+  avatar      String?
+  create_at   DateTime  @default(now())
+  update_at   DateTime  @updatedAt
+  SMSToken    SMSToken[]
+  Product     Product[]
 }
 
 model SMSToken {
-  id         Int      @id @default(autoincrement())
-  token      String   @unique
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     Int
+  id          Int       @id @default(autoincrement())
+  token       String    @unique
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
+}
+
+model Product {
+  id          Int       @id @default(autoincrement())
+  title       String
+  price       Float
+  description String
+  photo       String
+
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
 }
