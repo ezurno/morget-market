@@ -29,3 +29,8 @@ export const PHONE_ERROR = "전화번호 형식이 맞지 않습니다.";
 
 export const EMAIL_ERROR_INVALID_EMAIL_UNIQUE = "이미 사용 중인 이메일 입니다.";
 export const EMAIL_ERROR_NOT_FOUND = "해당하는 이메일이 존재하지 않습니다.";
+
+export const PHOTO_ERROR_REQUIRED = "사진 이미지를 추가 해주세요.";
+export const TITLE_ERROR_REQUIRED = "제목을 추가 해주세요.";
+export const DESCRIPTION_ERROR_REQUIRED = "자세한 설명을 추가 해주세요.";
+export const PRICE_ERROR_REQUIRED = "가격을 입력 해주세요.";
