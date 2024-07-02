@@ -34,3 +34,4 @@ export const PHOTO_ERROR_REQUIRED = "사진 이미지를 추가 해주세요.";
 export const TITLE_ERROR_REQUIRED = "제목을 추가 해주세요.";
 export const DESCRIPTION_ERROR_REQUIRED = "자세한 설명을 추가 해주세요.";
 export const PRICE_ERROR_REQUIRED = "가격을 입력 해주세요.";
+export const PRICE_ERROR_INVALID_TYPE = "숫자를 입력해주세요.";
