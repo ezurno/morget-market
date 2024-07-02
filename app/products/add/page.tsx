@@ -56,6 +56,7 @@ export default function AddProduct() {
     const file = files[0];
     const url = URL.createObjectURL(file);
     setPreview(url);
+    setFile(file);
     const response = await getUploadUrl();
     console.log(response);
     if (response.success) {
