@@ -12,6 +12,7 @@ import { unstable_cache as nextCashe } from "next/cache";
  * 3. 동작 시 'home-products' 에 대한 데이터를 찾으려 함
  */
 const getCashedProducts = nextCashe(getInitialProducts, ["home-products"], {
+  // 60 초 마다 함수를 재실행 (재 검증)
   revalidate: 60,
 });
 
