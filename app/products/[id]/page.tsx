@@ -5,15 +5,19 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { UserIcon } from "@heroicons/react/24/solid";
-import { unstable_cache as nextCashe, revalidateTag } from "next/cache";
+import {
+  unstable_cache as nextCashe,
+  revalidateTag,
+  revalidatePath,
+} from "next/cache";
 
 async function getIsOwner(userId: number) {
-  const session = await getSession();
-  //해당 session 에 id 값이 존재 할 경우
-  if (session.id) {
-    return session.id === userId;
-    // 해당 id 와 제품의 id 가 일치하는지 확인 후 return
-  }
+  // const session = await getSession();
+  // //해당 session 에 id 값이 존재 할 경우
+  // if (session.id) {
+  //   return session.id === userId;
+  //   // 해당 id 와 제품의 id 가 일치하는지 확인 후 return
+  // }
 
   return false;
 }
@@ -35,6 +39,12 @@ async function getProduct(id: number) {
       },
     },
   });
+  // fetch("https://naver.com", {
+  //   next: {
+  //     // revalidate: 60,
+  //     tags: ["test"],
+  //   },
+  // });
 
   console.log(product);
 
@@ -68,6 +78,15 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   return {
     title: product?.title,
   };
+}
+
+export async function generateStaticParams() {
+  const products = await db.product.findMany({
+    select: {
+      id: true,
+    },
+  });
+  return products.map((product) => ({ id: product.id + "" }));
 }
 
 export default async function ProductDetail({

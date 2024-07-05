@@ -34,6 +34,12 @@ async function getInitialProducts() {
   return products;
 }
 
+// page 를 강제로 dynamic 으로 변경
+// export const dynamic = "force-dynamic";
+
+// page 를 60초 마다 갱신
+// export const revalidate = 60;
+
 export default async function Products() {
   const initialProducts = await getCashedProducts();
   return (
