@@ -1,8 +1,8 @@
 "use client";
 
-import { deletePhoto, editProduct } from "@/app/products/[id]/edit/actions";
-import { getUploadUrl } from "@/app/products/add/actions";
-import { productSchema, ProductType } from "@/app/products/add/schema";
+import { deletePhoto, editProduct } from "@/app/home/[id]/edit/actions";
+import { getUploadUrl } from "@/app/home/add/actions";
+import { productSchema, ProductType } from "@/app/home/add/schema";
 import { PhotoIcon } from "@heroicons/react/24/solid";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
@@ -38,9 +38,7 @@ export default function EditForm({
   const onSubmit = handleSubmit(async (data: ProductType) => {
     if (!file && !preview) return;
     if (file) {
-      const photoId = product.photo.split(
-        `${process.env.IMAGEDELIVERY_URL}`
-      )[1];
+      const photoId = product.photo.split(`${IMAGEDELIVERY_URL}`)[1];
       await deletePhoto(photoId);
       const cloudflareForm = new FormData();
       cloudflareForm.append("file", file);
@@ -104,7 +102,7 @@ export default function EditForm({
   };
 
   useEffect(() => {
-    const photoId = product.photo.split(`${process.env.IMAGEDELIVERY_URL}`)[1];
+    const photoId = product.photo.split(`${IMAGEDELIVERY_URL}`)[1];
     setValue("photo", `${IMAGEDELIVERY_URL}${photoId}`);
   }, [product, setValue]);
 

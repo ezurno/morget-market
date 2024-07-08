@@ -62,6 +62,7 @@ export default function AddProduct() {
     const response = await getUploadUrl();
     console.log(response);
     if (response.success) {
+      console.log(`TEST >>> `, response.result);
       const { id, uploadURL } = response.result;
       setUploadUrl(uploadURL);
       setValue("photo", `${IMAGEDELIVERY_URL}${id}`);

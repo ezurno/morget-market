@@ -74,6 +74,6 @@ export async function editProduct(formData: FormData) {
 
     revalidatePath("/home");
     revalidateTag("/product-detail");
-    redirect(`/products/${product.id}`);
+    redirect(`/home`);
   }
 }

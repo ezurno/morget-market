@@ -1,3 +1,5 @@
+"use server";
+
 import db from "@/lib/db";
 import { formatToWon } from "@/lib/utils";
 import Image from "next/image";
@@ -65,10 +67,14 @@ export default async function ProductDetail({
     return notFound();
   }
   const isOwner = await getIsOwner(product.userId);
-  const revalidate = async () => {
+  revalidateTag("product-detail");
+  revalidateTag("product-title");
+
+  const onDelete = async () => {
     "use server";
-    // xxxx tag 를 갖는 data fetching
-    revalidateTag("xxxx");
+    if (!isOwner) return;
+    revalidateTag("product-detail");
+    revalidateTag("product-title");
   };
 
   return (
@@ -108,14 +114,16 @@ export default async function ProductDetail({
         </span>
         {isOwner ? (
           <div>
-            <button className="bg-red-500 px-5 py-2.5 rounded-md text-white font-semibold">
-              Delete product
-            </button>
-            <form action={revalidate}>
+            <form action={onDelete}>
+              <button className="bg-red-500 px-5 py-2.5 rounded-md text-white font-semibold">
+                Delete product
+              </button>
+            </form>
+            {/* <form action={revalidate}>
               <button className="bg-red-500 px-5 py-2.5 rounded-md text-white font-semibold">
                 Revalidate title cache
               </button>
-            </form>
+            </form> */}
           </div>
         ) : null}
         <Link
@@ -126,7 +134,7 @@ export default async function ProductDetail({
         </Link>
         {isOwner ? (
           <Link
-            href={`/products/${id}/edit`}
+            href={`/home/${id}/edit`}
             className="flex items-center justify-center px-5 py-2.5 bg-blue-500 rounded-md text-white font-semibold"
           >
             편집
