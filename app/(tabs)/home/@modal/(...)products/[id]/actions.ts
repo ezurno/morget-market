@@ -2,6 +2,8 @@ import db from "@/lib/db";
 import { getSession } from "@/lib/sessions/session";
 import { revalidatePath, revalidateTag } from "next/cache";
 
+const IMAGEDELIVERY_URL = "https://imagedelivery.net/VgnS9oc7uEZr48wa5MuWXg/";
+
 /**
  * 해당 상품의 등록자인지 여부를 판단 해 상품을 삭제하는 로직
  * @param id 상품 id
@@ -18,7 +20,7 @@ export const onDelete = async (id: number, isOwner: boolean) => {
     },
   });
 
-  const photoId = product.photo.split(`${process.env.IMAGEDELIVERY_URL}`)[1];
+  const photoId = product.photo.split(`${IMAGEDELIVERY_URL}`)[1];
   await fetch(
     `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/images/v1${photoId}`,
     {

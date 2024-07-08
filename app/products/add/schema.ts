@@ -8,6 +8,7 @@ import {
 import { z } from "zod";
 
 export const productSchema = z.object({
+  id: z.coerce.number().optional(),
   photo: z.string({
     required_error: PHOTO_ERROR_REQUIRED,
   }),

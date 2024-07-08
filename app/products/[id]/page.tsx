@@ -26,11 +26,11 @@ async function getProductTitle(id: number) {
 }
 
 const getCashedProduct = nextCashe(getProduct, ["product-detail"], {
-  tags: ["product-detail", "xxxx"],
+  tags: ["product-detail"],
 });
 
 const getCashedProductTitle = nextCashe(getProductTitle, ["product-title"], {
-  tags: ["product-title", "xxxx"],
+  tags: ["product-title", "product-detail"],
 });
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
@@ -124,6 +124,14 @@ export default async function ProductDetail({
         >
           채팅하기
         </Link>
+        {isOwner ? (
+          <Link
+            href={`/products/${id}/edit`}
+            className="flex items-center justify-center px-5 py-2.5 bg-blue-500 rounded-md text-white font-semibold"
+          >
+            편집
+          </Link>
+        ) : null}
       </div>
     </div>
   );

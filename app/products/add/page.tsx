@@ -10,6 +10,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ProductType, productSchema } from "./schema";
 
+const IMAGEDELIVERY_URL = "https://imagedelivery.net/VgnS9oc7uEZr48wa5MuWXg/";
+
 export default function AddProduct() {
   const [preview, setPreview] = useState("");
   const [uploadUrl, setUploadUrl] = useState("");
@@ -62,7 +64,7 @@ export default function AddProduct() {
     if (response.success) {
       const { id, uploadURL } = response.result;
       setUploadUrl(uploadURL);
-      setValue("photo", `${process.env.IMAGEDELIVERY_URL}${id}`);
+      setValue("photo", `${IMAGEDELIVERY_URL}${id}`);
     }
   };
 
