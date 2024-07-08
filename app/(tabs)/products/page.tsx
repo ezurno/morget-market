@@ -1,10 +1,8 @@
-import ListProduct from "@/components/list-product";
 import ProductList from "@/components/product-list";
 import db from "@/lib/db";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { unstable_cache as nextCashe } from "next/cache";
-
 /**
  * nextCashe 의 첫 args
  * 1. 비용이 많이 드는 계산, 데이터베이스 query 를 가동시키는 함수
@@ -46,8 +44,8 @@ export default async function Products() {
     <div>
       <ProductList initialProducts={initialProducts} />
       <Link
-        href={`/products/add`}
-        className="bg-orange-500 flex items-center justify-center rounded-full size-16 fixed bottom-24 right-8 text-white transition-colors hover:bg-orange-400 cursor-pointer"
+        href="/products/add"
+        className="bg-orange-500 flex items-center justify-center rounded-full size-16 fixed bottom-24 right-8 text-white transition-colors hover:bg-orange-400"
       >
         <PlusIcon className="size-10" />
       </Link>

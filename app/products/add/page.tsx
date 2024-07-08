@@ -62,10 +62,7 @@ export default function AddProduct() {
     if (response.success) {
       const { id, uploadURL } = response.result;
       setUploadUrl(uploadURL);
-      setValue(
-        "photo",
-        `https://imagedelivery.net/VgnS9oc7uEZr48wa5MuWXg/${id}`
-      );
+      setValue("photo", `${process.env.IMAGEDELIVERY_URL}${id}`);
     }
   };
 

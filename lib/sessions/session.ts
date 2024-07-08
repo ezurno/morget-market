@@ -1,3 +1,5 @@
+"use server";
+
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
 
@@ -10,7 +12,7 @@ interface ISessionContent {
  *
  * @returns session 을 한 번에 관리하기 위함
  */
-export function getSession() {
+export async function getSession() {
   return getIronSession<ISessionContent>(cookies(), {
     cookieName: "morget-cookie",
     password: process.env.COOKIE_PASSWORD!,
