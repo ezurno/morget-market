@@ -4,9 +4,10 @@ import Image from "next/image";
 import { formatToTimeAgo } from "@/lib/utils";
 import { EyeIcon } from "@heroicons/react/24/solid";
 import { getSession } from "@/lib/sessions/session";
-import { unstable_cache as nextCache, revalidateTag } from "next/cache";
+import { unstable_cache as nextCache } from "next/cache";
 import LikeButton from "@/components/like-button";
-import { dislikePost, likePost } from "./actions";
+import { getComments } from "./actions";
+import { CommentList } from "@/components/comment-list";
 
 const getCachedPost = nextCache(getPost, ["post-detail"], {
   tags: ["post-detail"],
@@ -77,6 +78,30 @@ async function getLikeStatus(postId: number, userId: number) {
   };
 }
 
+function getCachedComments(postId: number) {
+  const cachedComments = nextCache(getComments, ["comments"], {
+    tags: [`comments-${postId}`],
+  });
+  return cachedComments(postId);
+}
+
+async function getUserData() {
+  const session = await getSession();
+  const userData = session.id
+    ? await db.user.findUnique({
+        where: {
+          id: session.id,
+        },
+        select: {
+          id: true,
+          avatar: true,
+          username: true,
+        },
+      })
+    : null;
+  return userData;
+}
+
 export default async function PostDetail({
   params,
 }: {
@@ -89,6 +114,9 @@ export default async function PostDetail({
 
   // nextCache 와 getSession 을 함께 쓸 수가 없으므로 찢어서 args 로 넘겨서 사용한다!
   const session = await getSession();
+  const allComments = await getCachedComments(post.id);
+  const user = await getUserData();
+
   const { likeCount, isLiked } = await getCachedLikeStatus(id, session.id!);
 
   return (
@@ -116,6 +144,14 @@ export default async function PostDetail({
           <span>조회 {post.views}</span>
         </div>
         <LikeButton isLiked={isLiked} likeCount={likeCount} postId={id} />
+      </div>
+      <div className="py-4">
+        <CommentList
+          allComments={allComments}
+          sessionId={session.id!}
+          postId={post.id}
+          user={user}
+        />
       </div>
     </div>
   );
