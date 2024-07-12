@@ -84,7 +84,6 @@ export default async function ProductDetail({
     const room = await db.chatRoom.create({
       data: {
         users: {
-          // 사용자 유저들을 모아올 것이기 때문
           connect: [
             {
               id: product.userId,
@@ -93,6 +92,11 @@ export default async function ProductDetail({
               id: session.id,
             },
           ],
+        },
+        product: {
+          connect: {
+            id: product.id,
+          },
         },
       },
       select: {
@@ -159,7 +163,7 @@ export default async function ProductDetail({
         </form>
         {isOwner ? (
           <Link
-            href={`/home/${id}/edit`}
+            href={`/products/${id}/edit`}
             className="flex items-center justify-center px-5 py-2.5 bg-blue-500 rounded-md text-white font-semibold"
           >
             편집

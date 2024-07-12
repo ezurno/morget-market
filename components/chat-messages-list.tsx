@@ -7,6 +7,7 @@ import { ArrowUpCircleIcon } from "@heroicons/react/24/solid";
 import { formatToTimeAgo } from "@/lib/utils";
 import { createClient, RealtimeChannel } from "@supabase/supabase-js";
 import defaultAvatar from "@/public/goguma.png";
+import { saveMessage } from "@/app/chats/action";
 
 interface ChatMessagesListProps {
   initialMessages: initialChatMessages;
@@ -39,7 +40,7 @@ export default function ChatMessagesList({
     } = event;
     setMessage(value);
   };
-  const onSubmit = (event: React.FormEvent) => {
+  const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     // alert(message);
 
@@ -72,6 +73,7 @@ export default function ChatMessagesList({
         },
       },
     });
+    await saveMessage(message, chatRoomId);
     setMessage("");
   };
 

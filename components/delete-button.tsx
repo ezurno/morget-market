@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { onDelete } from "../app/(tabs)/home/@modal/(...)home/[id]/actions";
+import { onDelete } from "../app/(tabs)/home/@modal/(...)products/[id]/actions";
 
 export default function DeleteButton({
   id,

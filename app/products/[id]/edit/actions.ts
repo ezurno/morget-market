@@ -72,8 +72,8 @@ export async function editProduct(formData: FormData) {
       },
     });
 
-    revalidatePath("/home");
+    revalidatePath("/products");
     revalidateTag("/product-detail");
-    redirect(`/home`);
+    redirect(`/products`);
   }
 }

@@ -52,6 +52,7 @@ model Product {
   updated_at  DateTime  @updatedAt
   userId      Int
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chatRooms    ChatRoom[]
 }
 
 model Post {
@@ -100,7 +101,8 @@ model Like {
 model ChatRoom {
   id          String    @id @default(cuid())
   users       User[]
-
+  product    Product  @relation(fields: [productId], references: [id])
+  productId   Int
 
   created_at  DateTime  @default(now())
   updated_at  DateTime  @updatedAt

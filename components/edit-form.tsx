@@ -1,8 +1,8 @@
 "use client";
 
-import { deletePhoto, editProduct } from "@/app/home/[id]/edit/actions";
-import { getUploadUrl } from "@/app/home/add/actions";
-import { productSchema, ProductType } from "@/app/home/add/schema";
+import { deletePhoto, editProduct } from "@/app/products/[id]/edit/actions";
+import { getUploadUrl } from "@/app/products/add/actions";
+import { productSchema, ProductType } from "@/app/products/add/schema";
 import { PhotoIcon } from "@heroicons/react/24/solid";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
