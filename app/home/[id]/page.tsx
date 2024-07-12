@@ -4,7 +4,7 @@ import db from "@/lib/db";
 import { formatToWon } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { UserIcon } from "@heroicons/react/24/solid";
 import {
   unstable_cache as nextCashe,
@@ -12,6 +12,7 @@ import {
   revalidatePath,
 } from "next/cache";
 import { getIsOwner, getProduct } from "./actions";
+import { getSession } from "@/lib/sessions/session";
 
 async function getProductTitle(id: number) {
   console.log("title");
@@ -77,6 +78,31 @@ export default async function ProductDetail({
     revalidateTag("product-title");
   };
 
+  const createChatRoom = async () => {
+    "use server";
+    const session = await getSession();
+    const room = await db.chatRoom.create({
+      data: {
+        users: {
+          // 사용자 유저들을 모아올 것이기 때문
+          connect: [
+            {
+              id: product.userId,
+            },
+            {
+              id: session.id,
+            },
+          ],
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    redirect(`/chats/${room.id}`);
+  };
+
   return (
     <div>
       <div className="relative aspect-square">
@@ -126,12 +152,11 @@ export default async function ProductDetail({
             </form> */}
           </div>
         ) : null}
-        <Link
-          className="bg-orange-500 px-5 py-2.5 rounded-md text-white font-semibold"
-          href={``}
-        >
-          채팅하기
-        </Link>
+        <form action={createChatRoom}>
+          <button className="bg-orange-500 px-5 py-2.5 rounded-md text-white font-semibold">
+            채팅하기
+          </button>
+        </form>
         {isOwner ? (
           <Link
             href={`/home/${id}/edit`}
