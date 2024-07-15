@@ -18,3 +18,25 @@ export async function saveMessage(payload: string, chatRoomId: string) {
     select: { id: true },
   });
 }
+
+export async function checkMessageAsRead(
+  sessionId: number,
+  chatRoomId: string
+) {
+  console.log(`SESSION >>`, sessionId);
+  console.log(`CHATROOM >>`, chatRoomId);
+  const updatedMessage = await db.message.updateMany({
+    where: {
+      id: {
+        not: sessionId,
+      },
+      chatRoomId: chatRoomId,
+      isRead: false,
+    },
+    data: {
+      isRead: true,
+    },
+  });
+
+  return updatedMessage;
+}

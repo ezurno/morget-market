@@ -3,7 +3,9 @@ import db from "@/lib/db";
 import { getSession } from "@/lib/sessions/session";
 import { Prisma } from "@prisma/client";
 import { notFound } from "next/navigation";
+import { checkMessageAsRead } from "./action";
 
+// 현재 채팅방 정보 가져오기
 async function getRoom(id: string) {
   const room = await db.chatRoom.findUnique({
     where: {
@@ -39,6 +41,7 @@ async function getMessages(chatRoomId: string) {
       payload: true,
       created_at: true,
       userId: true,
+      isRead: true,
       user: {
         select: {
           avatar: true,
@@ -76,9 +79,20 @@ export default async function ChatRoom({ params }: { params: { id: string } }) {
   const user = await getUserProfile();
   if (!user) return notFound();
   console.log(`messages`, messages);
+
+  // 동시에 안읽은 메세지는 채팅방 들어가면서 읽음으로 수정
+  // db 작업도 다시 해야 함
+  const setReadMessages = messages.map((message) => ({
+    ...message,
+    isRead: true,
+  }));
+
+  if (!session.id) return notFound();
+
+  await checkMessageAsRead(session.id, params.id);
   return (
     <ChatMessagesList
-      initialMessages={messages}
+      initialMessages={setReadMessages}
       userId={session.id!}
       username={user.username}
       avatar={user.avatar!}

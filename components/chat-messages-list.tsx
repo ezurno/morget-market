@@ -7,7 +7,7 @@ import { ArrowUpCircleIcon } from "@heroicons/react/24/solid";
 import { formatToTimeAgo } from "@/lib/utils";
 import { createClient, RealtimeChannel } from "@supabase/supabase-js";
 import defaultAvatar from "@/public/goguma.png";
-import { saveMessage } from "@/app/chats/action";
+import { saveMessage } from "@/app/chats/[id]/action";
 
 interface ChatMessagesListProps {
   initialMessages: initialChatMessages;
@@ -52,6 +52,7 @@ export default function ChatMessagesList({
         payload: message,
         created_at: new Date(),
         userId,
+        isRead: false,
         user: {
           username: "string",
           avatar: `xxx`,
@@ -67,6 +68,7 @@ export default function ChatMessagesList({
         payload: message,
         created_at: new Date(),
         userId,
+        isRead: false,
         user: {
           username,
           avatar: avatar ? avatar : defaultAvatar,

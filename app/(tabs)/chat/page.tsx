@@ -1,6 +1,8 @@
 import db from "@/lib/db";
 import { getSession } from "@/lib/sessions/session";
 import { notFound } from "next/navigation";
+import Link from "next/link";
+import ChatMessage from "@/components/chat-message";
 
 //모든 채팅방 가져오기
 async function getChatsList(id: number) {
@@ -47,13 +49,22 @@ async function getChatsList(id: number) {
 export default async function Chat() {
   const session = await getSession();
   if (!session.id) return notFound();
+  const id = session.id;
   const chatsList = await getChatsList(session.id!);
 
+  // console.log(chatsList);
+
   return (
-    <h2>
+    <div className="flex flex-col gap-5 p-5">
       {chatsList.map((chat) => (
-        <h2>{chat.product.title}</h2>
+        <Link
+          key={chat.id}
+          href={`/chats/${chat.id}`}
+          className="cursor-pointer"
+        >
+          <ChatMessage chat={chat} id={id} roomId={chat.id} />
+        </Link>
       ))}
-    </h2>
+    </div>
   );
 }
