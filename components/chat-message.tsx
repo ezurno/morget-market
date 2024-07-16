@@ -2,6 +2,7 @@ import db from "@/lib/db";
 import Image from "next/image";
 import defaultProfile from "@/public/potato.png";
 import { unstable_cache as nextCache, revalidateTag } from "next/cache";
+import { useEffect } from "react";
 /**
  *  읽지 않은 메세지 수를 확인 하는 logic
  * @param id session-id
@@ -20,14 +21,6 @@ async function countUnreadMessages(id: number, roomId: string) {
   return unreadCount;
 }
 
-const cachedCountUnreadMessages = nextCache(
-  countUnreadMessages,
-  ["count-messages"],
-  {
-    tags: ["count-messages"],
-  }
-);
-
 export default async function ChatMessage({
   chat,
   id,
@@ -37,8 +30,7 @@ export default async function ChatMessage({
   id: number;
   roomId: string;
 }) {
-  console.log(chat);
-  const unReadCount = await cachedCountUnreadMessages(id!, roomId!);
+  const unReadCount = await countUnreadMessages(id!, roomId!);
 
   return (
     <div className="flex gap-2.5 odd:bg-neutral-800 p-2 overflow-hidden rounded-md">
