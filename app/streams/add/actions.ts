@@ -2,6 +2,7 @@
 
 import db from "@/lib/db";
 import { getSession } from "@/lib/sessions/session";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { record, z } from "zod";
 
@@ -48,5 +49,6 @@ export async function startStream(_: any, formData: FormData) {
     },
   });
 
+  revalidatePath("/live");
   redirect(`/streams/${stream.id}`);
 }

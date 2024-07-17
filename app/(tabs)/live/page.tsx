@@ -1,8 +1,8 @@
 import { PlusIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 import { getLiveList } from "./actions";
-import Image from "next/image";
 import LiveBox from "@/components/live-box";
+import { revalidatePath } from "next/cache";
 
 export default async function Live() {
   const liveList = await getLiveList();

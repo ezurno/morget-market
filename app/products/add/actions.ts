@@ -5,6 +5,7 @@ import { getSession } from "@/lib/sessions/session";
 import fs from "fs/promises";
 import { redirect } from "next/navigation";
 import { productSchema } from "./schema";
+import { revalidatePath } from "next/cache";
 
 export async function uploadProduct(formData: FormData) {
   const data = {
@@ -35,8 +36,8 @@ export async function uploadProduct(formData: FormData) {
           id: true,
         },
       });
+      revalidatePath("/home");
       redirect(`/products/${product.id}`);
-      //redirect("/products")
     }
   }
 }
@@ -51,6 +52,8 @@ export async function getUploadUrl() {
       },
     }
   );
+  revalidatePath("/home");
+
   const data = await response.json();
   return data;
 }
