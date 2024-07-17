@@ -89,6 +89,11 @@ export default async function ChatRoom({ params }: { params: { id: string } }) {
 
   if (!session.id) return notFound();
 
+  const url = process.env.SUPABASE_URL;
+  if (!url) return notFound();
+  const public_key = process.env.SUPABASE_PUBLIC_KEY;
+  if (!public_key) return notFound();
+
   await checkMessageAsRead(session.id, params.id);
   return (
     <ChatMessagesList
@@ -97,6 +102,8 @@ export default async function ChatRoom({ params }: { params: { id: string } }) {
       username={user.username}
       avatar={user.avatar!}
       chatRoomId={params.id}
+      url={url}
+      public_key={public_key}
     />
   );
 }

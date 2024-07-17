@@ -1,3 +1,6 @@
+"use server";
+
+import LiveChatList from "@/components/live-chat-list";
 import db from "@/lib/db";
 import { getSession } from "@/lib/sessions/session";
 import { UserIcon } from "@heroicons/react/24/solid";
@@ -10,10 +13,12 @@ async function getStream(id: string) {
       id,
     },
     select: {
+      id: true,
       title: true,
       stream_key: true,
       stream_id: true,
       userId: true,
+      liveChats: true,
       user: {
         select: {
           avatar: true,
@@ -27,6 +32,21 @@ async function getStream(id: string) {
   return stream;
 }
 
+async function getUserProfile() {
+  const session = await getSession();
+  const user = await db.user.findUnique({
+    where: {
+      id: session.id!,
+    },
+    select: {
+      username: true,
+      avatar: true,
+    },
+  });
+
+  return user;
+}
+
 export default async function StreamDetail({
   params,
 }: {
@@ -37,7 +57,14 @@ export default async function StreamDetail({
   const stream = await getStream(id);
   if (!stream) return notFound();
 
+  const user = await getUserProfile();
+  if (!user) return notFound();
   const session = await getSession();
+
+  const url = process.env.SUPABASE_URL;
+  if (!url) return notFound();
+  const public_key = process.env.SUPABASE_PUBLIC_KEY;
+  if (!public_key) return notFound();
 
   return (
     <div className="p-10">
@@ -80,6 +107,15 @@ export default async function StreamDetail({
           </div>
         </div>
       ) : null}
+      <LiveChatList
+        initialMessages={stream.liveChats}
+        userId={session.id!}
+        liveStreamId={stream.id}
+        username={user.username}
+        avatar={user.avatar!}
+        url={url}
+        public_key={public_key}
+      />
     </div>
   );
 }

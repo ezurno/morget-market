@@ -15,12 +15,9 @@ interface ChatMessagesListProps {
   chatRoomId: string;
   username: string;
   avatar: string;
+  url: string;
+  public_key: string;
 }
-
-const SUPABASE_PUBLIC_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdjYWF1cWhzeHJncWRtZXlpb2FwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjA3NTMwNTIsImV4cCI6MjAzNjMyOTA1Mn0.Img5NaD47FdKLVyZEFDDJg_LjsbLqzdvuIkckoIbQjk";
-
-const SUPABASE_URL = "https://gcaauqhsxrgqdmeyioap.supabase.co";
 
 export default function ChatMessagesList({
   initialMessages,
@@ -28,6 +25,8 @@ export default function ChatMessagesList({
   chatRoomId,
   username,
   avatar,
+  url,
+  public_key,
 }: ChatMessagesListProps) {
   const [messages, setMessages] = useState(initialMessages);
   const [message, setMessage] = useState<string>("");
@@ -81,7 +80,7 @@ export default function ChatMessagesList({
 
   useEffect(() => {
     // 처음 chat-room 에 접근 시 supabase 에 접근해서
-    const client = createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY);
+    const client = createClient(url, public_key);
     // channel 을 등록해야 됨
     channelRef.current = client.channel(`room-${chatRoomId}`);
     channelRef.current

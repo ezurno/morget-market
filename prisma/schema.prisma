@@ -31,6 +31,7 @@ model User {
   chat_rooms  ChatRoom[]
   messages    Message[]
   streams     LiveStream[]
+  live_chats  LiveChat[]
 }
 
 model SMSToken {
@@ -112,13 +113,14 @@ model ChatRoom {
 
 model Message {
   id          Int       @id @default(autoincrement())
+  payload     String
+  isRead      Boolean   @default(false)
+
   room        ChatRoom  @relation(fields: [chatRoomId], references: [id])
   user        User      @relation(fields: [userId], references: [id])
-  payload     String
 
   chatRoomId  String
   userId      Int
-  isRead      Boolean   @default(false)
 
   created_at  DateTime  @default(now())
   updated_at  DateTime  @updatedAt
@@ -135,4 +137,19 @@ model LiveStream {
 
   user        User      @relation(fields: [userId], references: [id])
   userId      Int
+  liveChats   LiveChat[]
+}
+
+model LiveChat {
+  id            Int       @id @default(autoincrement())
+  payload       String
+  
+  liveStream    LiveStream  @relation(fields: [liveStreamId], references: [id])
+  user          User        @relation(fields: [userId], references: [id])
+
+  userId        Int
+  liveStreamId  String
+
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
 }
