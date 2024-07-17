@@ -47,7 +47,7 @@ export function AddComment({ postId, handleSubmit, user }: IAddCommentProps) {
         />
         {user && (
           <button
-            className="text-orange-500 hover:text-orange-400 active:text-orange-300 disabled:text-gray-500 disabled:cursor-not-allowed disabled:animate-pulse"
+            className="text-emerald-500 hover:text-emerald-400 active:text-emerald-300 disabled:text-gray-500 disabled:cursor-not-allowed disabled:animate-pulse"
             type="submit"
             disabled={loading}
           >

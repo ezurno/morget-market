@@ -4,7 +4,7 @@ import { UserIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
-async function getStream(id: number) {
+async function getStream(id: string) {
   const stream = await db.liveStream.findUnique({
     where: {
       id,
@@ -32,8 +32,8 @@ export default async function StreamDetail({
 }: {
   params: { id: string };
 }) {
-  const id = Number(params.id);
-  if (isNaN(id)) return notFound();
+  const id = String(params.id);
+  if (!id) return notFound();
   const stream = await getStream(id);
   if (!stream) return notFound();
 
@@ -43,7 +43,7 @@ export default async function StreamDetail({
     <div className="p-10">
       <div className="relative aspect-video">
         <iframe
-          src={`https://${process.env.CLOUDFLARE_DOMAIN}/dcc04edd23ec9e8f2b3dc87a54ee1268/iframe`}
+          src={`https://${process.env.CLOUDFLARE_DOMAIN}/${stream.stream_id}/iframe`}
           allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
           className="w-full h-full rounded-md"
         ></iframe>

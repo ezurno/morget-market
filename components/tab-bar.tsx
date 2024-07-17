@@ -35,7 +35,7 @@ export default function TabBar() {
         ) : (
           <OutlineNewspaperIcon className="w-7 h-7" />
         )}
-        <span>동네생활</span>
+        <span>커뮤니티</span>
       </Link>
       <Link href="/chat" className="flex flex-col items-center gap-px">
         {pathname === "/chat" ? (
@@ -51,7 +51,7 @@ export default function TabBar() {
         ) : (
           <OutlineVideoCameraIcon className="w-7 h-7" />
         )}
-        <span>쇼핑</span>
+        <span>라이브</span>
       </Link>
       <Link href="/profile" className="flex flex-col items-center gap-px">
         {pathname === "/profile" ? (
@@ -59,7 +59,7 @@ export default function TabBar() {
         ) : (
           <OutlineUserIcon className="w-7 h-7" />
         )}
-        <span>나의 당근</span>
+        <span>마이 페이지</span>
       </Link>
     </div>
   );

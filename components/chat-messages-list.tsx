@@ -121,7 +121,7 @@ export default function ChatMessagesList({
           >
             <span
               className={`${
-                message.userId === userId ? "bg-neutral-500" : "bg-orange-500"
+                message.userId === userId ? "bg-neutral-500" : "bg-emerald-500"
               } p-2.5 rounded-md`}
             >
               {message.payload}
@@ -143,7 +143,7 @@ export default function ChatMessagesList({
           placeholder="Write a message..."
         />
         <button className="absolute right-0">
-          <ArrowUpCircleIcon className="size-10 text-orange-500 transition-colors hover:text-orange-300" />
+          <ArrowUpCircleIcon className="size-10 text-emerald-500 transition-colors hover:text-emerald-300" />
         </button>
       </form>
     </div>

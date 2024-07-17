@@ -125,7 +125,7 @@ model Message {
 }
 
 model LiveStream {
-  id          Int       @id @default(autoincrement())
+  id          String       @id @default(cuid())
   title       String
   stream_key  String
   stream_id   String

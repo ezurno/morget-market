@@ -67,7 +67,7 @@ export default async function ChatMessage({
             {chat.messages[0] && chat.messages[0].created_at.toDateString()}
           </p>
           {unReadCount === 0 ? null : (
-            <span className="badge size-8 flex justify-center  items-center rounded-full bg-orange-400 text-white">{`+${unReadCount}`}</span>
+            <span className="badge size-8 flex justify-center  items-center rounded-full bg-emerald-400 text-white">{`+${unReadCount}`}</span>
           )}
         </div>
       </div>

@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "LiveStream" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "id" TEXT NOT NULL PRIMARY KEY,
     "title" TEXT NOT NULL,
     "stream_key" TEXT NOT NULL,
     "stream_id" TEXT NOT NULL,

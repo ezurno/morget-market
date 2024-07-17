@@ -41,7 +41,7 @@ export default function LikeButton({
       onClick={onClick}
       className={`flex items-center gap-2 text-neutral-400 text-sm border border-neutral-400 rounded-full p-2  transition-colors ${
         state.isLiked
-          ? "bg-orange-500 text-white border-orange-500"
+          ? "bg-emerald-500 text-white border-emerald-500"
           : "hover:bg-neutral-800"
       }`}
     >
