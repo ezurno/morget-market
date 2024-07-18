@@ -2,6 +2,7 @@
 
 import db from "@/lib/db";
 import { getSession } from "@/lib/sessions/session";
+import { revalidateTag } from "next/cache";
 
 /**
  * 주고 받았던 메세지를 chatroom 에 값으로 저장하기 위한 로직
@@ -17,6 +18,8 @@ export async function saveMessage(payload: string, chatRoomId: string) {
     },
     select: { id: true },
   });
+
+  revalidateTag("chatroom-data");
 }
 
 export async function checkMessageAsRead(
@@ -27,7 +30,7 @@ export async function checkMessageAsRead(
   console.log(`CHATROOM >>`, chatRoomId);
   const updatedMessage = await db.message.updateMany({
     where: {
-      id: {
+      userId: {
         not: sessionId,
       },
       chatRoomId: chatRoomId,
@@ -38,5 +41,6 @@ export async function checkMessageAsRead(
     },
   });
 
+  revalidateTag("chatroom-data");
   return updatedMessage;
 }

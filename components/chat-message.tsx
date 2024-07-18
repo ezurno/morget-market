@@ -1,37 +1,17 @@
 import db from "@/lib/db";
 import Image from "next/image";
 import defaultProfile from "@/public/potato.png";
-import { unstable_cache as nextCache, revalidateTag } from "next/cache";
-import { useEffect } from "react";
-/**
- *  읽지 않은 메세지 수를 확인 하는 logic
- * @param id session-id
- */
-async function countUnreadMessages(id: number, roomId: string) {
-  const unreadCount = await db.message.count({
-    where: {
-      userId: {
-        not: id,
-      },
-      chatRoomId: roomId,
-      isRead: false,
-    },
-  });
-
-  return unreadCount;
-}
+import { formatToTimeAgo } from "@/lib/utils";
 
 export default async function ChatMessage({
   chat,
-  id,
-  roomId,
+  unReadCount,
 }: {
   chat: any;
   id: number;
   roomId: string;
+  unReadCount: number;
 }) {
-  const unReadCount = await countUnreadMessages(id!, roomId!);
-
   return (
     <div className="flex gap-2.5 odd:bg-neutral-800 p-2 overflow-hidden rounded-md">
       <div className="relative size-28 rounded-md overflow-hidden">
@@ -64,7 +44,7 @@ export default async function ChatMessage({
         <div className="flex w-full justify-between gap-2">
           <p>{chat.messages[0] && chat.messages[0].payload}</p>
           <p>
-            {chat.messages[0] && chat.messages[0].created_at.toDateString()}
+            {chat.messages[0] && formatToTimeAgo(chat.messages[0].created_at)}
           </p>
           {unReadCount === 0 ? null : (
             <span className="badge size-8 flex justify-center  items-center rounded-full bg-emerald-400 text-white">{`+${unReadCount}`}</span>

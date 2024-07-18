@@ -4,6 +4,7 @@ import { getSession } from "@/lib/sessions/session";
 import { Prisma } from "@prisma/client";
 import { notFound } from "next/navigation";
 import { checkMessageAsRead } from "./action";
+import { revalidateTag } from "next/cache";
 
 // 현재 채팅방 정보 가져오기
 async function getRoom(id: string) {
@@ -27,7 +28,6 @@ async function getRoom(id: string) {
     }
   }
 
-  console.log(room);
   return room;
 }
 
@@ -94,7 +94,10 @@ export default async function ChatRoom({ params }: { params: { id: string } }) {
   const public_key = process.env.SUPABASE_PUBLIC_KEY;
   if (!public_key) return notFound();
 
+  // 메시지를 읽음으로 처리하고 캐시를 무효화합니다.
   await checkMessageAsRead(session.id, params.id);
+  revalidateTag("chatroom-data");
+
   return (
     <ChatMessagesList
       initialMessages={setReadMessages}

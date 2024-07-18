@@ -52,7 +52,7 @@ export default function LiveChatList({
         userId,
         user: {
           username: "string",
-          avatar: `xxx`,
+          avatar: null,
         },
       },
     ]);
@@ -103,8 +103,8 @@ export default function LiveChatList({
         >
           {message.userId === userId ? null : (
             <Image
-              src={message.user.avatar ? message.user.avatar : ""}
-              alt={message.user.username}
+              src={message.user?.avatar ? message.user.avatar : defaultAvatar}
+              alt={message.user?.username}
               width={50}
               height={50}
               className="size-8 rounded-full"
@@ -136,7 +136,7 @@ export default function LiveChatList({
           className="bg-transparent rounded-full w-full h-10 focus:outline-none px-5 ring-2 focus:ring-4 transition ring-neutral-200 focus:ring-neutral-50 border-none placeholder:text-neutral-400"
           type="text"
           name="message"
-          placeholder="Write a message..."
+          placeholder="채팅 메세지를 입력하세요."
         />
         <button className="absolute right-0">
           <ArrowUpCircleIcon className="size-10 text-emerald-500 transition-colors hover:text-emerald-300" />

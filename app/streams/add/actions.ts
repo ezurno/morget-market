@@ -9,10 +9,23 @@ import { record, z } from "zod";
 const title = z.string();
 
 export async function startStream(_: any, formData: FormData) {
+  const session = await getSession();
   const results = title.safeParse(formData.get("title"));
   if (!results.success) {
     return results.error.flatten();
   }
+
+  // 기존에 이미 방송이 있는지 확인
+  const checker = await db.liveStream.findFirst({
+    where: {
+      userId: session.id!,
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  if (checker) return;
 
   // cloudflare 와 연결 streaming
   const response = await fetch(
@@ -34,7 +47,6 @@ export async function startStream(_: any, formData: FormData) {
   );
   const data = await response.json();
   console.log(data);
-  const session = await getSession();
 
   // db 에 저장하기
   const stream = await db.liveStream.create({

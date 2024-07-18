@@ -2,7 +2,6 @@
 
 import db from "@/lib/db";
 import { getSession } from "@/lib/sessions/session";
-import fs from "fs/promises";
 import { redirect } from "next/navigation";
 import { productSchema } from "./schema";
 import { revalidatePath } from "next/cache";
